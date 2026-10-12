@@ -8,6 +8,7 @@ const navItems = [
   ["About", "about"],
   ["Services", "services"],
   ["Projects", "projects"],
+  ["Why Choose Us", "why"],
   ["Contact", "contact"],
 ];
 
@@ -262,12 +263,6 @@ const Navbar = () => {
             <motion.a
               href="#contact"
               variants={itemVariants}
-              whileHover={{
-                scale: 1.02,
-              }}
-              whileTap={{
-                scale: 0.97,
-              }}
               className="
                 btn
                 btn-primary
