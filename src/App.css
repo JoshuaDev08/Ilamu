@@ -1,0 +1,104 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap");
+
+@import "tailwindcss";
+
+@plugin "daisyui" {
+  themes: false;
+  logs: false;
+}
+
+/* LIGHT */
+@plugin "daisyui/theme" {
+  name: "ilamu";
+  default: true;
+  prefersdark: false; 
+  color-scheme: light;
+
+  --color-base-100: #ffffff;
+  --color-base-200: #f4f6f7;
+  --color-base-300: #dce2e5;
+  --color-base-content: #101518;
+
+  --color-primary: #1379c9;
+  --color-primary-content: #ffffff;
+
+  --color-secondary: #194c78;
+  --color-secondary-content: #ffffff;
+
+  --color-accent: #e6b93c;
+  --color-accent-content: #101518;
+
+  --color-neutral: #101518;
+  --color-neutral-content: #ffffff;
+
+  --color-info: #1379c9;
+  --color-info-content: #ffffff;
+
+  --color-success: #27835a;
+  --color-success-content: #ffffff;
+
+  --color-warning: #e6b93c;
+  --color-warning-content: #101518;
+
+  --color-error: #b93b3b;
+  --color-error-content: #ffffff;
+
+  --radius-selector: 0.125rem;
+  --radius-field: 0.125rem;
+  --radius-box: 0.125rem;
+
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+}
+
+/* DARK */
+@plugin "daisyui/theme" {
+  name: "ilamu-dark";
+  default: false;
+  prefersdark: true;
+  color-scheme: dark;
+
+  --color-base-100: #101518;
+  --color-base-200: #182126;
+  --color-base-300: #243139;
+  --color-base-content: #f4f6f7;
+
+  --color-primary: #45a3e5;
+  --color-primary-content: #081116;
+
+  --color-secondary: #6aaee0;
+  --color-secondary-content: #081116;
+
+  --color-accent: #e6b93c;
+  --color-accent-content: #101518;
+
+  --color-neutral: #0c1114;
+  --color-neutral-content: #ffffff;
+
+  --color-info: #45a3e5;
+  --color-info-content: #081116;
+
+  --color-success: #4caf7d;
+  --color-success-content: #081116;
+
+  --color-warning: #e6b93c;
+  --color-warning-content: #101518;
+
+  --color-error: #e26b6b;
+  --color-error-content: #ffffff;
+
+  --radius-selector: 0.125rem;
+  --radius-field: 0.125rem;
+  --radius-box: 0.125rem;
+
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+}
