@@ -17,25 +17,35 @@ import PageLoader from "./components/LoadingComponent";
 import HeroBackground from "./assets/hero.jpeg";
 
 const App = () => {
-  const [heroReady, setHeroReady] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
   const [loaderExiting, setLoaderExiting] = useState(false);
-  const [showLoader, setShowLoader] = useState(true);
+  const [appReady, setAppReady] = useState(false);
 
   useEffect(() => {
     const image = new Image();
 
     image.src = HeroBackground;
 
+    // If already cached and ready, skip loader
+    if (image.complete && image.naturalWidth > 0) {
+      setAppReady(true);
+      setShowLoader(false);
+      return;
+    }
+
+    // Only show loader when the asset is actually not ready
+    setShowLoader(true);
+
     const handleReady = () => {
-      setHeroReady(true);
+      setAppReady(true);
+      setLoaderExiting(true);
+
+      window.setTimeout(() => {
+        setShowLoader(false);
+      }, 500);
     };
 
     image.onload = handleReady;
-
-    // Covers cached images too.
-    if (image.complete) {
-      handleReady();
-    }
 
     return () => {
       image.onload = null;
@@ -43,21 +53,12 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    if (!heroReady) return;
-
-    const exitTimer = window.setTimeout(() => {
-      setLoaderExiting(true);
-    }, 350);
-
-    const removeTimer = window.setTimeout(() => {
-      setShowLoader(false);
-    }, 900);
+    document.body.style.overflow = showLoader ? "hidden" : "";
 
     return () => {
-      window.clearTimeout(exitTimer);
-      window.clearTimeout(removeTimer);
+      document.body.style.overflow = "";
     };
-  }, [heroReady]);
+  }, [showLoader]);
 
   return (
     <>
@@ -66,9 +67,8 @@ const App = () => {
       <div
         className={`
           transition-opacity
-          duration-700
-
-          ${heroReady ? "opacity-100" : "opacity-0"}
+          duration-500
+          ${appReady ? "opacity-100" : "opacity-0"}
         `}
       >
         <Navbar />
