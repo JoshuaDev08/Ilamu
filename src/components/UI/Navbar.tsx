@@ -12,14 +12,24 @@ const navItems = [
   ["Contact", "contact"],
 ];
 
+/*
+  Sections where navbar text should be WHITE.
+
+  Add/remove section IDs here depending on
+  the background of each section.
+*/
+const darkSections = ["home", "why"];
+
 const navbarVariants = {
   hidden: {
     y: -30,
     opacity: 0,
   },
+
   visible: {
     y: 0,
     opacity: 1,
+
     transition: {
       duration: 0.65,
       ease: [0.22, 1, 0.36, 1] as const,
@@ -33,9 +43,11 @@ const itemVariants = {
     y: -8,
     opacity: 0,
   },
+
   visible: {
     y: 0,
     opacity: 1,
+
     transition: {
       duration: 0.4,
       ease: [0.22, 1, 0.36, 1] as const,
@@ -45,8 +57,17 @@ const itemVariants = {
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+
   const [isScrolled, setIsScrolled] = useState(false);
 
+  const [isWhiteText, setIsWhiteText] = useState(true);
+
+  /*
+    SCROLL STATE
+
+    Controls only whether navbar becomes
+    floating glass.
+  */
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 30);
@@ -63,6 +84,51 @@ const Navbar = () => {
     };
   }, []);
 
+  /*
+    CURRENT SECTION DETECTION
+
+    Determines whether navbar text should
+    be white or dark based on the section
+    behind it.
+  */
+  useEffect(() => {
+    const checkCurrentSection = () => {
+      const sections = Array.from(
+        document.querySelectorAll<HTMLElement>("section[id]"),
+      );
+
+      const navbarPosition = window.scrollY + 40;
+
+      const currentSection = sections.find((section) => {
+        const sectionTop = section.offsetTop;
+        const sectionBottom = section.offsetTop + section.offsetHeight;
+
+        return navbarPosition >= sectionTop && navbarPosition < sectionBottom;
+      });
+
+      if (!currentSection) {
+        setIsWhiteText(true);
+        return;
+      }
+
+      setIsWhiteText(darkSections.includes(currentSection.id));
+    };
+
+    checkCurrentSection();
+
+    window.addEventListener("scroll", checkCurrentSection, {
+      passive: true,
+    });
+
+    window.addEventListener("resize", checkCurrentSection);
+
+    return () => {
+      window.removeEventListener("scroll", checkCurrentSection);
+
+      window.removeEventListener("resize", checkCurrentSection);
+    };
+  }, []);
+
   return (
     <>
       <motion.header
@@ -70,13 +136,17 @@ const Navbar = () => {
         initial="hidden"
         animate="visible"
         className={`
-        fixed
-        inset-x-0
-        top-0
-        z-50
-        transition-all
-        duration-500
-            ${isScrolled ? "px-2 pt-2 sm:px-3 lg:px-4" : "px-4 pt-0 sm:px-6 lg:px-8"}
+          fixed
+          inset-x-0
+          top-0
+          z-50
+          transition-all
+          duration-500
+          ${
+            isScrolled
+              ? "px-2 pt-2 sm:px-3 lg:px-4"
+              : "px-4 pt-0 sm:px-6 lg:px-8"
+          }
         `}
       >
         <motion.div
@@ -84,82 +154,88 @@ const Navbar = () => {
             borderRadius: isScrolled ? 10 : 0,
           }}
           transition={{
-            duration: 0.05,
+            duration: 0.1,
             ease: [0.22, 1, 0.36, 1],
           }}
           className={`
             navbar
             relative
             mx-auto
-            max-h-[60px]
             w-full
             max-w-7xl
             overflow-hidden
-            px-0
             transition-all
             duration-500
+
             ${
-            isScrolled
-          ? `
-              border
-              border-base-content/10
-              bg-base-100/75
-              px-5
-              shadow-[0_16px_50px_rgba(0,0,0,0.10)]
-              backdrop-blur-xl
-              sm:px-3
-            `
-          : `
-              border
-              border-transparent
-              bg-transparent
-              shadow-none
-              backdrop-blur-none
-            `
-      }
-    `}
+              isScrolled
+                ? `
+                    h-[58px]
+                    border
+                    border-white/15
+                    bg-white/10
+                    px-3
+                    shadow-[0_12px_40px_rgba(0,0,0,0.14)]
+                    backdrop-blur-xl
+                    sm:px-4
+                  `
+                : `
+                    h-[50px]
+                    border
+                    border-transparent
+                    bg-transparent
+                    px-0
+                    shadow-none
+                    backdrop-blur-none
+                  `
+            }
+          `}
         >
-          {/* Glass top highlight */}
+          {/* Glass highlight */}
           <motion.div
             animate={{
               opacity: isScrolled ? 1 : 0,
             }}
             transition={{
-              duration: 0.4,
+              duration: 0.35,
             }}
             className="
+              pointer-events-none
               absolute
               inset-x-0
               top-0
               h-1/2
               bg-gradient-to-b
-              from-base-content/[0.05]
+              from-white/20
+              via-white/[0.03]
               to-transparent
             "
           />
 
-          {/* Soft glow */}
+          {/* Soft Glass Glow */}
           <motion.div
             animate={{
-              opacity: isScrolled ? 0.7 : 0,
+              opacity: isScrolled ? 0.5 : 0,
             }}
             transition={{
-              duration: 0.4,
+              duration: 0.35,
             }}
             className="
-                absolute
-                -top-14
-                left-1/2
-                h-24
-                w-[50%]
-                -translate-x-1/2
-                rounded-full
-                bg-primary/10
-                blur-3xl
+              pointer-events-none
+              absolute
+              -top-12
+              left-1/2
+              h-20
+              w-[45%]
+              -translate-x-1/2
+              rounded-full
+              bg-white/20
+              blur-3xl
             "
           />
 
-          {/* Logo */}
+          {/* ================= LOGO ================= */}
+
           <motion.a
             href="#home"
             variants={itemVariants}
@@ -185,38 +261,55 @@ const Navbar = () => {
 
             <span className="flex flex-col">
               <strong
-                className="
+                className={`
                   font-['Manrope']
                   text-[18px]
                   font-bold
                   leading-none
                   tracking-[0.13em]
-                  text-base-content
+                  transition-colors
+                  duration-500
                   sm:text-[20px]
-                "
+
+                  ${isWhiteText ? "text-white" : "text-base-content"}
+                `}
               >
                 ILAMU
               </strong>
 
               <small
-                className="
+                className={`
                   mt-[5px]
                   font-['Manrope']
                   text-[7px]
                   font-bold
                   leading-none
                   tracking-[0.27em]
-                  text-secondary
+                  transition-colors
+                  duration-500
                   sm:text-[8px]
-                "
+
+                  ${isWhiteText ? "text-accent" : "text-secondary"}
+                `}
               >
                 CONSTRUCTION
               </small>
             </span>
           </motion.a>
 
-          {/* Desktop Navigation */}
-          <nav className="relative z-10 hidden items-center gap-7 lg:flex xl:gap-8">
+          {/* ================= DESKTOP NAV ================= */}
+
+          <nav
+            className="
+              relative
+              z-10
+              hidden
+              items-center
+              gap-6
+              lg:flex
+              xl:gap-8
+            "
+          >
             {navItems.map(([label, href]) => (
               <motion.a
                 key={href}
@@ -229,17 +322,27 @@ const Navbar = () => {
                   duration: 0.2,
                   ease: "easeOut",
                 }}
-                className="
+                className={`
                   group
                   relative
                   font-['Inter']
                   text-[13px]
                   font-semibold
-                  text-base-content/75
                   transition-colors
-                  duration-300
-                  hover:text-primary
-                "
+                  duration-500
+
+                  ${
+                    isWhiteText
+                      ? `
+                          text-white/85
+                          hover:text-white
+                        `
+                      : `
+                          text-base-content/75
+                          hover:text-primary
+                        `
+                  }
+                `}
               >
                 {label}
 
@@ -266,25 +369,29 @@ const Navbar = () => {
               className="
                 btn
                 btn-primary
-                ml-2
-                min-h-10
-                px-5
+                ml-1
                 rounded-md
+                px-5
                 font-['Manrope']
                 text-xs
                 font-bold
                 tracking-[0.02em]
-                shadow-[0_8px_24px_rgba(19,121,201,0.18)]
               "
             >
               Request a Quote
             </motion.a>
           </nav>
 
-          {/* Mobile */}
+          {/* ================= MOBILE BUTTON ================= */}
+
           <motion.div
             variants={itemVariants}
-            className="relative z-10 flex-none lg:hidden"
+            className="
+              relative
+              z-10
+              flex-none
+              lg:hidden
+            "
           >
             <motion.button
               type="button"
@@ -294,12 +401,19 @@ const Navbar = () => {
               whileTap={{
                 scale: 0.92,
               }}
-              className="
+              className={`
                 btn
                 btn-ghost
                 btn-square
-                text-base-content
-              "
+                transition-colors
+                duration-500
+
+                ${
+                  isWhiteText
+                    ? "text-white hover:bg-white/10"
+                    : "text-base-content"
+                }
+              `}
             >
               <AnimatePresence mode="wait" initial={false}>
                 {menuOpen ? (
@@ -351,10 +465,12 @@ const Navbar = () => {
         </motion.div>
       </motion.header>
 
-      {/* Mobile Menu */}
+      {/* ================= MOBILE MENU ================= */}
+
       <AnimatePresence>
         {menuOpen && (
           <>
+            {/* Backdrop */}
             <motion.div
               initial={{
                 opacity: 0,
@@ -379,6 +495,7 @@ const Navbar = () => {
               "
             />
 
+            {/* Mobile Panel */}
             <motion.div
               initial={{
                 opacity: 0,
@@ -403,15 +520,15 @@ const Navbar = () => {
                 fixed
                 left-3
                 right-3
-                top-[92px]
+                top-[82px]
                 z-50
                 overflow-hidden
-                rounded-2xl
+                rounded-xl
                 border
                 border-base-content/10
-                bg-base-100/95
+                bg-base-100/90
                 p-3
-                shadow-2xl
+                shadow-[0_18px_50px_rgba(0,0,0,0.18)]
                 backdrop-blur-xl
                 lg:hidden
               "
@@ -438,17 +555,18 @@ const Navbar = () => {
                       scale: 0.98,
                     }}
                     className="
-                      rounded-xl
-                      px-4
-                      py-3
-                      font-['Inter']
-                      text-sm
-                      font-semibold
-                      text-base-content/80
-                      transition-colors
-                      hover:bg-primary/5
-                      hover:text-primary
-                    "
+                        rounded-lg
+                        px-4
+                        py-3
+                        font-['Inter']
+                        text-sm
+                        font-semibold
+                        text-base-content/80
+                        transition-colors
+                        duration-300
+                        hover:bg-primary/5
+                        hover:text-primary
+                      "
                   >
                     {label}
                   </motion.a>

@@ -1,10 +1,10 @@
 import { motion } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
 
-import Project1 from "../../assets/project1.jpg";
-import Project2 from "../../assets/project2.jpg";
-import Project3 from "../../assets/project3.jpg";
-import Project4 from "../../assets/project4.jpg";
+import Project1 from "../assets/Gallery/projects-1.jpeg";
+import Project2 from "../assets/Gallery/projects-2.jpeg";
+import Project3 from "../assets/Gallery/projects-3.jpeg";
+import Project4 from "../assets/Gallery/projects-4.jpeg";
 
 const projects = [
   {
@@ -37,16 +37,27 @@ const projects = [
   },
 ];
 
-const projectVariants = {
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.08,
+    },
+  },
+};
+
+const cardVariants = {
   hidden: {
     opacity: 0,
-    y: 28,
+    y: 24,
   },
+
   visible: {
     opacity: 1,
     y: 0,
+
     transition: {
-      duration: 0.65,
+      duration: 0.5,
       ease: [0.22, 1, 0.36, 1] as const,
     },
   },
@@ -58,7 +69,6 @@ const Projects = () => {
       id="projects"
       className="
         relative
-        overflow-hidden
         bg-base-100
         py-20
         sm:py-24
@@ -66,11 +76,11 @@ const Projects = () => {
       "
     >
       <div className="mx-auto w-full max-w-7xl px-6 lg:px-8">
-        {/* Header */}
+        {/* Section Header */}
         <motion.div
           initial={{
             opacity: 0,
-            y: 20,
+            y: 18,
           }}
           whileInView={{
             opacity: 1,
@@ -78,10 +88,10 @@ const Projects = () => {
           }}
           viewport={{
             once: true,
-            amount: 0.5,
+            amount: 0.4,
           }}
           transition={{
-            duration: 0.6,
+            duration: 0.5,
             ease: [0.22, 1, 0.36, 1],
           }}
           className="
@@ -143,14 +153,9 @@ const Projects = () => {
             </p>
           </div>
 
-          <motion.a
+          {/* Desktop CTA */}
+          <a
             href="#contact"
-            whileHover={{
-              y: -2,
-            }}
-            whileTap={{
-              scale: 0.97,
-            }}
             className="
               btn
               btn-neutral
@@ -162,19 +167,17 @@ const Projects = () => {
             "
           >
             View All Projects
-          </motion.a>
+          </a>
         </motion.div>
 
-        {/* Projects Grid */}
+        {/* Project Grid */}
         <motion.div
+          variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{
             once: true,
-            amount: 0.12,
-          }}
-          transition={{
-            staggerChildren: 0.1,
+            amount: 0.08,
           }}
           className="
             grid
@@ -197,7 +200,7 @@ const Projects = () => {
             return (
               <motion.article
                 key={project.title}
-                variants={projectVariants}
+                variants={cardVariants}
                 className={`
                   group
                   relative
@@ -207,26 +210,29 @@ const Projects = () => {
                 `}
               >
                 {/* Image */}
-                <motion.img
+                <img
                   src={project.image}
                   alt={`${project.title}, ${project.category} project`}
+                  loading="lazy"
+                  decoding="async"
                   className="
+                    absolute
+                    inset-0
                     h-full
                     w-full
                     object-cover
+                    transition-transform
+                    duration-700
+                    ease-out
+                    will-change-transform
+                    group-hover:scale-[1.045]
                   "
-                  whileHover={{
-                    scale: 1.045,
-                  }}
-                  transition={{
-                    duration: 0.65,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
                 />
 
-                {/* Overlay */}
+                {/* Single overlay */}
                 <div
                   className="
+                    pointer-events-none
                     absolute
                     inset-0
                     bg-gradient-to-t
@@ -236,24 +242,13 @@ const Projects = () => {
                   "
                 />
 
-                {/* Subtle hover tint */}
-                <div
-                  className="
-                    absolute
-                    inset-0
-                    bg-primary/0
-                    transition-colors
-                    duration-500
-                    group-hover:bg-primary/5
-                  "
-                />
-
                 {/* Content */}
                 <div
                   className="
                     absolute
                     inset-x-0
                     bottom-0
+                    z-10
                     flex
                     items-end
                     justify-between
@@ -262,11 +257,14 @@ const Projects = () => {
                     sm:p-7
                   "
                 >
-                  <motion.div
-                    initial={false}
-                    whileHover={{
-                      y: -2,
-                    }}
+                  {/* Project Info */}
+                  <div
+                    className="
+                      transition-transform
+                      duration-300
+                      ease-out
+                      group-hover:-translate-y-1
+                    "
                   >
                     <span
                       className="
@@ -306,8 +304,9 @@ const Projects = () => {
                     >
                       {project.location}
                     </p>
-                  </motion.div>
+                  </div>
 
+                  {/* Year + Arrow */}
                   <div className="flex flex-col items-end gap-3">
                     <span
                       className="
@@ -320,18 +319,12 @@ const Projects = () => {
                       {project.year}
                     </span>
 
-                    <motion.span
-                      initial={{
-                        opacity: 0,
-                        scale: 0.85,
-                      }}
-                      whileHover={{
-                        scale: 1.05,
-                      }}
+                    <span
                       className="
                         flex
                         h-9
                         w-9
+                        translate-y-1
                         items-center
                         justify-center
                         border
@@ -339,28 +332,31 @@ const Projects = () => {
                         bg-white/10
                         text-white
                         opacity-0
-                        backdrop-blur-sm
-                        transition-opacity
+                        transition-all
                         duration-300
+                        group-hover:translate-y-0
                         group-hover:opacity-100
                       "
                     >
                       <ArrowUpRight className="h-4 w-4" />
-                    </motion.span>
+                    </span>
                   </div>
                 </div>
 
-                {/* Gold accent line */}
-                <div
+                {/* Gold hover line */}
+                <span
                   className="
+                    pointer-events-none
                     absolute
                     bottom-0
                     left-0
+                    z-20
                     h-[3px]
                     w-0
                     bg-accent
-                    transition-all
-                    duration-500
+                    transition-[width]
+                    duration-300
+                    ease-out
                     group-hover:w-full
                   "
                 />
@@ -370,11 +366,8 @@ const Projects = () => {
         </motion.div>
 
         {/* Mobile CTA */}
-        <motion.a
+        <a
           href="#contact"
-          whileTap={{
-            scale: 0.97,
-          }}
           className="
             btn
             btn-neutral
@@ -387,7 +380,7 @@ const Projects = () => {
           "
         >
           View All Projects
-        </motion.a>
+        </a>
       </div>
     </section>
   );
