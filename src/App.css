@@ -56,7 +56,7 @@
 }
 
 /* DARK */
-@plugin "daisyui/theme" {
+/* @plugin "daisyui/theme" {
   name: "ilamu-dark";
   default: false;
   prefersdark: true;
@@ -101,7 +101,7 @@
   --border: 1px;
   --depth: 1;
   --noise: 0;
-}
+} */
 
 /* ========================================
    THEME-BASED SCROLLBAR

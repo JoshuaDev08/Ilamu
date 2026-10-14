@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Menu, X } from "lucide-react";
-import Logo from "../../assets/logo.png";
+import Logo from "../../assets/logo.webp";
 
 const navItems = [
   ["Home", "home"],

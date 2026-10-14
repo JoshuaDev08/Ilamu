@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import FaithImage from "../assets/faith.jpg";
+import FaithImage from "../assets/faith.webp";
 
 const FaithSection = () => {
   return (

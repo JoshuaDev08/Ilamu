@@ -8,7 +8,7 @@ import {
   Star,
 } from "lucide-react";
 
-import AboutImage from '../assets/about.jpeg';
+import AboutImage from '../assets/about.webp';
 
 const values = [
   {
